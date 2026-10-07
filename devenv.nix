@@ -22,7 +22,7 @@ let
     name = "nix-cf-proof-sandbox";
     paths = [ patchedGit forcePushProbe gitIdentity pkgs.bashInteractive pkgs.coreutils pkgs.cacert ];
   };
-  nixosSystem = import ./nix/nixos-container.nix { inherit pkgs; };
+  nixosSystem = import ./nix/nixos-container.nix { inherit pkgs patchedGit; };
   image = pkgs.dockerTools.buildLayeredImage {
     name = "nix-cf-proof";
     tag = "latest";
@@ -54,7 +54,7 @@ in
   outputs = {
     git = patchedGit;
     inherit sandbox;
-  } // lib.optionalAttrs pkgs.stdenv.isLinux {
+  } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
     inherit image;
     nixos = nixosSystem;
   };
