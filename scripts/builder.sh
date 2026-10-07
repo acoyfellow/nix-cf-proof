@@ -22,7 +22,7 @@ CONF
 export NIX_CONFIG
 
 step() { echo "STEP $(date -u +%FT%TZ) $*"; }
-json_field() { node -e "process.stdout.write(String(require('$1')$2))"; }
+json_field() { node -e "process.stdout.write(String(JSON.parse(require('fs').readFileSync('$1','utf8'))$2))"; }
 
 nixpkgs_rev=$(json_field /work/src/devenv.lock ".nodes.nixpkgs.locked.rev")
 
