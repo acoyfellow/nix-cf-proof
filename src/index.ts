@@ -62,8 +62,11 @@ export class SandboxComputer extends BuilderComputer {
     }
     let console = '';
     try {
-      const response = await container.getTcpPort(8080).fetch('http://container/');
-      console = await response.text();
+      const port = container.getTcpPort(8080);
+      const stale = await (await port.fetch('http://container/')).text();
+      steps.push(`stale snapshot ${stale.length} bytes`);
+      await scheduler.wait(3_000);
+      console = await (await port.fetch('http://container/')).text();
       steps.push(`console fetched ${console.length} bytes`);
     } catch (error) {
       steps.push(`console: ${String(error)}`);

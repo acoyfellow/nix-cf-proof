@@ -38,7 +38,16 @@ Fix applied: devenv.nix uses `dockerTools.buildImage`. Report upstream to the Co
 - Installing Nix needs `sudo` (creates `/nix` volume). Agent cannot enter the password.
 - Action for Jordan: `curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install`, then `nix profile add github:cachix/devenv/v2.4.0`.
 
-## systemd probe (open, 2026-10-07 tick 6)
+## systemd probe: RESOLVED (tick 7) — NixOS boots
+
+- systemd 261.2 is PID 1. `systemctl is-system-running` = degraded.
+- Running: systemd-journald, systemd-udevd, systemd-logind, dbus-broker, agetty.
+- Failed units: firewall.service (no iptables/nftables in the microVM sandbox, expected), nscd.service.
+- Warnings: /etc/hostname and /etc/hosts are read-only overlay mounts from the runtime; image root owned by uid 2346 triggers systemd-tmpfiles unsafe-path warnings.
+- Tick 6 "init never starts" was a probe bug: the nc loop served a response built before init ran.
+- Evidence: receipts/container-systemd.json.
+
+### Tick 6 notes (superseded)
 
 - Boot probe runs as PID 1, uid 0, caps 0xabac35fb, cgroup2 writable at /sys/fs/cgroup, kernel 6.18.54-cloudflare-microvm.
 - The NixOS init never becomes PID 1. The probe script stops before its "init target" trace line; a child (pid 15, empty cmdline) is still running. Cause not known yet.
