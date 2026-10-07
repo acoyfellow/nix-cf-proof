@@ -33,7 +33,11 @@ devenv version || true
 
 step build
 cd /work/src
-devenv build outputs.git outputs.image > /work/build.json
+build_outputs() {
+  rm -rf /homeless-shelter
+  devenv build outputs.git outputs.image > /work/build.json
+}
+build_outputs || build_outputs || build_outputs
 cat /work/build.json
 git_store_path=$(json_field /work/build.json "['outputs.git']")
 image_store_path=$(json_field /work/build.json "['outputs.image']")
