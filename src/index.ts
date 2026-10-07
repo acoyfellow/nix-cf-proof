@@ -55,7 +55,7 @@ export class SandboxComputer extends BuilderComputer {
       () => 'exited:0',
       (error: unknown) => `exited:${String(error)}`,
     );
-    const settled = await Promise.race([exit, scheduler.wait(20_000).then(() => 'alive-after-20s')]);
+    const settled = await Promise.race([exit, scheduler.wait(45_000).then(() => 'alive-after-20s')]);
     steps.push(`lifecycle ${settled}`);
     if (settled !== 'alive-after-20s') {
       return { lifecycle: settled, steps: steps.join('\n') };

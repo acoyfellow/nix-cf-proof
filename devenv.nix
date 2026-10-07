@@ -42,10 +42,17 @@ let
         printf 'HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n'
         cat /tmp/boot/preflight.txt
         echo '--- systemd console ---'
-        tail -c 20000 /tmp/boot/console.log 2>/dev/null
+        tail -c 8000 /tmp/boot/console.log 2>/dev/null
+        echo '--- processes ---'
+        for p in /proc/[0-9]*; do printf '%s %s\n' "''${p#/proc/}" "$(tr '\0' ' ' < "$p/cmdline" 2>/dev/null | cut -c1-160)"; done
+        echo '--- systemctl ---'
+        ${nixosSystem}/sw/bin/systemctl is-system-running 2>&1
+        ${nixosSystem}/sw/bin/systemctl list-units --no-pager --state=failed 2>&1 | head -40
+        echo '--- journal ---'
+        ${nixosSystem}/sw/bin/journalctl -b --no-pager -n 60 2>&1
       } | nc -l -p 8080 >/dev/null 2>&1
     done) &
-    exec ${nixosSystem}/init > /tmp/boot/console.log 2>&1
+    exec ${nixosSystem}/init systemd.log_target=console systemd.log_level=info > /tmp/boot/console.log 2>&1
   '';
   image = pkgs.dockerTools.buildImage {
     name = "nix-cf-proof";
