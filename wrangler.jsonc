@@ -7,16 +7,12 @@
   "workers_dev": true,
   "preview_urls": false,
   "observability": { "enabled": true },
+  "vars": { "ACCOUNT_ID": "bfcb6ac5b3ceaf42a09607f6f7925823" },
   "containers": [
     {
       "class_name": "SandboxComputer",
       "scheduling_policy": "durable_object",
-      "images": {
-        "sandbox": {
-          "dockerfile": "./container/Dockerfile",
-          "build_context": "."
-        }
-      }
+      "images": {}
     }
   ],
   "durable_objects": {

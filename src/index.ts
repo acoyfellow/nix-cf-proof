@@ -1,8 +1,8 @@
-import { DurableObject } from 'cloudflare:workers';
+import { BuilderComputer } from './builder';
 
 type ContainerImageName = 'sandbox';
 
-type ProofEnv = Env & { PROOF_TOKEN: string };
+type ProofEnv = Env & { PROOF_TOKEN: string; ACCOUNT_ID: string };
 
 type CommandResult = {
   command: string[];
@@ -15,11 +15,11 @@ const decoder = new TextDecoder();
 const SANDBOX_IMAGE: ContainerImageName = 'sandbox';
 const CONTAINER_READY_ATTEMPTS = 60;
 
-export class SandboxComputer extends DurableObject<ProofEnv> {
+export class SandboxComputer extends BuilderComputer {
   async probeSandbox(): Promise<Record<string, CommandResult>> {
     await this.ensureRunning(['/sandbox/bin/sleep', 'infinity']);
     return {
-      receipt: await this.run(['/sandbox/bin/cat', '/proof/build-receipt.json']),
+      receipt: await this.run(['/sandbox/bin/cat', '/proof/image.json']),
       identity: await this.run(['/sandbox/bin/git-identity']),
       forcePush: await this.run(['/sandbox/bin/force-push-probe']),
       uname: await this.run(['/sandbox/bin/uname', '-a']),
@@ -51,21 +51,6 @@ export class SandboxComputer extends DurableObject<ProofEnv> {
       units: await this.run(['/nixos-system/sw/bin/systemctl', 'list-units', '--no-pager', '--state=failed']),
       journal: await this.run(['/nixos-system/sw/bin/journalctl', '-b', '--no-pager', '-n', '80']),
     };
-  }
-
-  async stop(): Promise<void> {
-    const container = this.requireContainer();
-    if (container.running) {
-      await container.destroy('proof complete');
-    }
-  }
-
-  private requireContainer(): Container {
-    const container = this.ctx.container;
-    if (!container) {
-      throw new Error('container binding missing');
-    }
-    return container;
   }
 
   private async ensureRunning(entrypoint: string[]): Promise<void> {
@@ -122,10 +107,20 @@ export default {
       if (pathname === '/probe/systemd') {
         return Response.json(await env.SANDBOX.getByName('systemd').probeSystemd());
       }
+      if (pathname === '/build/start' && request.method === 'POST') {
+        const body = (await request.json()) as { sourceSha: string; registryPassword: string };
+        return Response.json(
+          await env.SANDBOX.getByName('builder').startBuild({ ...body, accountId: env.ACCOUNT_ID }),
+        );
+      }
+      if (pathname === '/build/status') {
+        return Response.json(await env.SANDBOX.getByName('builder').status());
+      }
       if (pathname === '/stop' && request.method === 'POST') {
         await Promise.all([
           env.SANDBOX.getByName('sandbox').stop(),
           env.SANDBOX.getByName('systemd').stop(),
+          env.SANDBOX.getByName('builder').stop(),
         ]);
         return Response.json({ stopped: true });
       }
