@@ -8,6 +8,9 @@ type BuildRequest = {
 
 type BuilderStatus = {
   running: boolean;
+  exit: string;
+  lastLog: string;
+  memoryPeak: string;
   log: string;
   receipt: string;
 };
@@ -18,7 +21,27 @@ const NIX_STATIC_URL =
   'https://hydra.nixos.org/job/nix/master/buildStatic.nix-cli.x86_64-linux/latest/download-by-type/file/binary-dist';
 const decoder = new TextDecoder();
 
+const KEEPALIVE_INTERVAL_MS = 60 * 1000;
+
 export class BuilderComputer extends DurableObject<Env> {
+  constructor(ctx: DurableObjectState, env: Env) {
+    super(ctx, env);
+    if (ctx.container?.running) {
+      void ctx.blockConcurrencyWhile(() => ctx.container!.setInactivityTimeout(BUILD_INACTIVITY_TIMEOUT_MS));
+      this.recordExit();
+    }
+  }
+
+  async alarm(): Promise<void> {
+    if (this.ctx.container?.running) {
+      const tail = await this.read(['tail', '-c', '6000', '/work-build.log']).catch(() => '');
+      const memory = await this.read(['cat', '/sys/fs/cgroup/memory.peak']).catch(() => '');
+      await this.ctx.storage.put('lastLog', tail);
+      await this.ctx.storage.put('memoryPeak', memory.trim());
+      await this.ctx.storage.setAlarm(Date.now() + KEEPALIVE_INTERVAL_MS);
+    }
+  }
+
   async startBuild(request: BuildRequest): Promise<{ started: boolean }> {
     const container = this.requireContainer();
     if (!container.running) {
@@ -30,6 +53,9 @@ export class BuilderComputer extends DurableObject<Env> {
       });
     }
     await container.setInactivityTimeout(BUILD_INACTIVITY_TIMEOUT_MS);
+    await this.ctx.storage.delete(['exit', 'lastLog', 'memoryPeak']);
+    this.recordExit();
+    await this.ctx.storage.setAlarm(Date.now() + KEEPALIVE_INTERVAL_MS);
     await this.waitForExec();
     const bootstrap = await this.fetchSource(request.sourceSha);
     await this.write('/work-bootstrap.sh', bootstrap);
@@ -52,11 +78,17 @@ export class BuilderComputer extends DurableObject<Env> {
 
   async status(): Promise<BuilderStatus> {
     const container = this.requireContainer();
+    const exit = (await this.ctx.storage.get<string>('exit')) ?? '';
+    const lastLog = (await this.ctx.storage.get<string>('lastLog')) ?? '';
+    const memoryPeak = (await this.ctx.storage.get<string>('memoryPeak')) ?? '';
     if (!container.running) {
-      return { running: false, log: '', receipt: '' };
+      return { running: false, exit, lastLog, memoryPeak, log: '', receipt: '' };
     }
     return {
       running: true,
+      exit,
+      lastLog,
+      memoryPeak,
       log: await this.read(['tail', '-c', '6000', '/work-build.log']),
       receipt: await this.read(['cat', '/work/receipt.json']),
     };
@@ -67,6 +99,16 @@ export class BuilderComputer extends DurableObject<Env> {
     if (container.running) {
       await container.destroy('build finished');
     }
+  }
+
+  private recordExit(): void {
+    const exit = this.requireContainer()
+      .monitor()
+      .then(
+        () => this.ctx.storage.put('exit', `exited cleanly at ${new Date().toISOString()}`),
+        (error: unknown) => this.ctx.storage.put('exit', `${String(error)} at ${new Date().toISOString()}`),
+      );
+    this.ctx.waitUntil(exit);
   }
 
   protected requireContainer(): Container {
