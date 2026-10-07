@@ -1,0 +1,25 @@
+receipts/cloudflare-build.json
+  s_5f6d4912d3191a::t_23a4673c981783 1
+receipts/container-systemd.json
+  s_5f6d4912d3191a::t_d2bb99c6846b3a 1
+scripts/promote.sh
+  s_5f6d4912d3191a::t_e50d3b56c83bbf 1-33
+wrangler.jsonc
+  s_5f6d4912d3191a::t_5119a952cede4a 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "dde2e30602652b6b77afd0b2dbb50d8af9eee3f8",
+  "prompts": {},
+  "sessions": {
+    "s_5f6d4912d3191a": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a115b9-60e9-71ec-8331-eb33236fb839",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
