@@ -8,3 +8,5 @@ container/ci.env
 receipts/local-*.json
 receipts/proof-token
 .dev.vars
+worker-configuration.d.ts
+.guardrail/

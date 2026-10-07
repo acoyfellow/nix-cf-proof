@@ -2,10 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 
 type ContainerImageName = 'sandbox';
 
-interface Env {
-  SANDBOX: DurableObjectNamespace<SandboxComputer>;
-  PROOF_TOKEN: string;
-}
+type ProofEnv = Env & { PROOF_TOKEN: string };
 
 type CommandResult = {
   command: string[];
@@ -18,7 +15,7 @@ const decoder = new TextDecoder();
 const SANDBOX_IMAGE: ContainerImageName = 'sandbox';
 const CONTAINER_READY_ATTEMPTS = 60;
 
-export class SandboxComputer extends DurableObject<Env> {
+export class SandboxComputer extends DurableObject<ProofEnv> {
   async probeSandbox(): Promise<Record<string, CommandResult>> {
     await this.ensureRunning(['/sandbox/bin/sleep', 'infinity']);
     return {
@@ -108,12 +105,12 @@ export class SandboxComputer extends DurableObject<Env> {
   }
 }
 
-function authorized(request: Request, env: Env): boolean {
+function authorized(request: Request, env: ProofEnv): boolean {
   return request.headers.get('authorization') === `Bearer ${env.PROOF_TOKEN}`;
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: ProofEnv): Promise<Response> {
     if (!env.PROOF_TOKEN || !authorized(request, env)) {
       return new Response('unauthorized', { status: 401 });
     }
