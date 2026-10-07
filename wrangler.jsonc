@@ -11,7 +11,12 @@
   "containers": [
     {
       "class_name": "SandboxComputer",
-      "scheduling_policy": "durable_object"
+      "scheduling_policy": "durable_object",
+      "images": {
+        "sandbox": {
+          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:89f1809879621a1b0b99458e9cd9ce4f29025ce71c8f60918be10c27013dc33a"
+        }
+      }
     }
   ],
   "durable_objects": {
