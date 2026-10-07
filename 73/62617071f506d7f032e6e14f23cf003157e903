@@ -1,0 +1,19 @@
+scripts/builder.sh
+  s_2d9292bc10df72::t_2d481fdb91b981 46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7362617071f506d7f032e6e14f23cf003157e903",
+  "prompts": {},
+  "sessions": {
+    "s_2d9292bc10df72": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a111ea-6bea-74aa-9f4b-648e30d0ee5d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
