@@ -11,8 +11,7 @@
   "containers": [
     {
       "class_name": "SandboxComputer",
-      "scheduling_policy": "durable_object",
-      "images": {}
+      "scheduling_policy": "durable_object"
     }
   ],
   "durable_objects": {
