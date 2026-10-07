@@ -37,3 +37,9 @@ Fix applied: devenv.nix uses `dockerTools.buildImage`. Report upstream to the Co
 - `/nix` does not exist. Gate check "local devenv shell" needs Nix + devenv on the Mac.
 - Installing Nix needs `sudo` (creates `/nix` volume). Agent cannot enter the password.
 - Action for Jordan: `curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install`, then `nix profile add github:cachix/devenv/v2.4.0`.
+
+## systemd probe (open, 2026-10-07 tick 6)
+
+- Boot probe runs as PID 1, uid 0, caps 0xabac35fb, cgroup2 writable at /sys/fs/cgroup, kernel 6.18.54-cloudflare-microvm.
+- The NixOS init never becomes PID 1. The probe script stops before its "init target" trace line; a child (pid 15, empty cmdline) is still running. Cause not known yet.
+- `exec()` into a container started with a custom entrypoint returns "internal error" (refs e.g. 7b9jiims2rb1ilmjvi52d51m). HTTP on port 8080 works.

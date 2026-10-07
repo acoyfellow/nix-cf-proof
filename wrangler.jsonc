@@ -14,7 +14,7 @@
       "scheduling_policy": "durable_object",
       "images": {
         "sandbox": {
-          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:cf80e3b9cf3162780418d50483dfdae4b282a3ad3841fdda273d00dbb090d3d3"
+          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:64d1918081cf6acf04e26384b9f0bbec634b6c6d9bfb2bf69a40f9261daec342"
         }
       }
     }
