@@ -43,7 +43,7 @@ git_store_path=$(json_field /work/build.json "['outputs.git']")
 image_store_path=$(json_field /work/build.json "['outputs.image']")
 
 step skopeo
-skopeo_out=$(nix build --no-link --print-out-paths "github:cachix/devenv-nixpkgs/$nixpkgs_rev#skopeo")
+skopeo_out=$(nix build --no-link --print-out-paths "github:cachix/devenv-nixpkgs/$nixpkgs_rev#skopeo.out")
 
 step push
 "$skopeo_out/bin/skopeo" copy --insecure-policy \
