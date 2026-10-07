@@ -108,7 +108,7 @@ export default {
         return Response.json(await env.SANDBOX.getByName('systemd').probeSystemd());
       }
       if (pathname === '/build/start' && request.method === 'POST') {
-        const body = (await request.json()) as { sourceSha: string; registryPassword: string };
+        const body = (await request.json()) as { sourceSha: string; registryPassword: string; script?: string };
         return Response.json(
           await env.SANDBOX.getByName('builder').startBuild({ ...body, accountId: env.ACCOUNT_ID }),
         );

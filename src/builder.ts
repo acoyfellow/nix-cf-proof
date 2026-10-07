@@ -2,6 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 
 type BuildRequest = {
   sourceSha: string;
+  script?: string;
   registryPassword: string;
   accountId: string;
 };
@@ -67,6 +68,7 @@ export class BuilderComputer extends DurableObject<Env> {
           REGISTRY_PASSWORD: request.registryPassword,
           ACCOUNT_ID: request.accountId,
           NIX_STATIC_URL,
+          BUILDER_SCRIPT: request.script ?? 'builder.sh',
           PATH: '/usr/local/bin:/usr/bin:/bin',
         },
         stdout: 'ignore',

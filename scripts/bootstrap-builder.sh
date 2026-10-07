@@ -30,4 +30,4 @@ ln -sf /work/nix-static /work/bin/nix-store
 tar -xzf /work/src.tar.gz -C /work/src --strip-components=1
 export PATH="/work/bin:$PATH"
 nix --version
-exec bash /work/src/scripts/builder.sh
+exec bash "/work/src/scripts/${BUILDER_SCRIPT:-builder.sh}"
