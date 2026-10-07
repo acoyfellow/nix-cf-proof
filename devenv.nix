@@ -52,7 +52,14 @@ let
         ${nixosSystem}/sw/bin/journalctl -b --no-pager -n 60 2>&1
       } | nc -l -p 8080 >/dev/null 2>&1
     done) &
+    {
+      echo "init target: $(readlink -f ${nixosSystem}/init)"
+      head -c 300 ${nixosSystem}/init
+      echo
+      echo "before exec $(date -u +%T)"
+    } >> /tmp/boot/preflight.txt 2>&1
     exec ${nixosSystem}/init systemd.log_target=console systemd.log_level=info > /tmp/boot/console.log 2>&1
+    echo "exec returned $?" >> /tmp/boot/preflight.txt
   '';
   image = pkgs.dockerTools.buildImage {
     name = "nix-cf-proof";
