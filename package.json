@@ -1,0 +1,14 @@
+{
+  "name": "nix-cf-proof",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "sh scripts/stamp-ci.sh",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "wrangler": "4.148.0"
+  }
+}

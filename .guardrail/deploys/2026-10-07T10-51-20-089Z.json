@@ -1,0 +1,49 @@
+{
+  "schema": "guardrail.deploy-receipt.v0",
+  "timestamp": "2026-10-07T10:51:20.089Z",
+  "command": [
+    "guardrail",
+    "receipt",
+    "./.guardrail-staged.43489.wrangler.jsonc"
+  ],
+  "configPath": "./.guardrail-staged.43489.wrangler.jsonc",
+  "decision": {
+    "allowed": false,
+    "findings": [
+      {
+        "severity": "CRITICAL",
+        "message": "local rule ban-host *.cloudflare-support-chat.workers.dev matched nix-cf-proof.cloudflare-support-chat.workers.dev — teaching-demo / SIRT account subdomain; do not deploy here"
+      },
+      {
+        "severity": "WARNING",
+        "message": "workers_dev = true with sensitive bindings, but code enforces auth (bearer-token). Verify auth is active in production."
+      },
+      {
+        "severity": "WARNING",
+        "message": "durable_object_namespace binding \"SANDBOX\" on workers.dev URL — protected by code auth"
+      }
+    ]
+  },
+  "exposure": {
+    "isPublic": true,
+    "surface": "workers.dev URL",
+    "reason": "workers_dev = true",
+    "criticalMessage": "workers_dev = true — Worker will have a public workers.dev URL with sensitive bindings",
+    "routes": [],
+    "workersDev": true
+  },
+  "bindings": [
+    {
+      "type": "durable_object_namespace",
+      "name": "SANDBOX"
+    }
+  ],
+  "auth": {
+    "detected": true,
+    "partial": false,
+    "patterns": [
+      "bearer-token"
+    ],
+    "source": "/Users/jcoeyman/cloudflare/nix-cf-proof/src/index.ts"
+  }
+}

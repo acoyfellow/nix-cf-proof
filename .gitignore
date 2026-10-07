@@ -1,0 +1,10 @@
+.devenv*
+devenv.local.nix
+.direnv
+node_modules
+.wrangler
+result*
+container/ci.env
+receipts/local-*.json
+receipts/proof-token
+.dev.vars
