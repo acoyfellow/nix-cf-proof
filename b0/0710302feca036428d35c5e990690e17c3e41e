@@ -1,0 +1,65 @@
+.gitignore
+  s_d58794dec92dc7::t_d5ce0de675cc0b 1-10
+.guardrail/deploys/2026-10-07T10-51-08-888Z.json
+  s_5f6d4912d3191a::t_02ef311714d640 1-49
+.guardrail/deploys/2026-10-07T10-51-20-089Z.json
+  s_5f6d4912d3191a::t_243def339c94b8 1-49
+README.md
+  s_5f6d4912d3191a::t_f4a9096ab12064 1-28
+container/Dockerfile
+  s_d58794dec92dc7::t_eb0a05c7d1d7d7 1-19
+container/assemble.sh
+  s_d58794dec92dc7::t_08aab6c12c7367 1-24
+container/nix.conf
+  s_d58794dec92dc7::t_d35b5f12ee66d2 1-7
+devenv.lock
+  s_5f6d4912d3191a::t_ca01bce7b2014f 1-65
+devenv.nix
+  s_5f6d4912d3191a::t_1a20d8518840cd 1-40
+devenv.yaml
+  s_5f6d4912d3191a::t_848adb4497a28b 1-3
+nix/nixos-container.nix
+  s_5f6d4912d3191a::t_62f4138268fae4 1-17
+nix/overlay.nix
+  s_5f6d4912d3191a::t_e3e755a2a87522 1-24
+nix/patches/001-disable-force-push.patch
+  s_5f6d4912d3191a::t_e0a9eb45cb4d8c 1-31
+nix/patches/002-disable-force-with-lease-and-plus-refspec.patch
+  s_5f6d4912d3191a::t_c935bb4531cbc8 1-58
+package.json
+  s_5f6d4912d3191a::t_b680c1eaa77597 1-14
+proof.sh
+  s_5f6d4912d3191a::t_dbf4d5a81c495e 1-66
+scripts/force-push-probe.sh
+  s_5f6d4912d3191a::t_904ccfd0fcecf9 1-26
+scripts/stamp-ci.sh
+  s_5f6d4912d3191a::t_40ddaca25f96bc 1-10
+src/index.ts
+  s_d58794dec92dc7::t_5f3b637d37636e 1-140
+wrangler.jsonc
+  s_5f6d4912d3191a::t_0123b4165eefbb 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b00710302feca036428d35c5e990690e17c3e41e",
+  "prompts": {},
+  "sessions": {
+    "s_5f6d4912d3191a": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a115b9-60e9-71ec-8331-eb33236fb839",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    },
+    "s_d58794dec92dc7": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a115e6-5bb3-75ac-b511-2988f1aebfad",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Jordan Coeyman <jcoeyman@cloudflare.com>"
+    }
+  }
+}
