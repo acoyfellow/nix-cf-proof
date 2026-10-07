@@ -1,5 +1,21 @@
 # Blockers
 
+## Finding: Cloudflare rejects dockerTools.buildLayeredImage output (2026-10-07)
+
+Image preparation (`POST /containers/image-preparations`) returns `pending` with reason `runtime image build failed` for every `buildLayeredImage` image. Wrangler shows only `pending` and times out after 15 minutes.
+
+| Image | Builder | Result |
+| --- | --- | --- |
+| busybox from Docker Hub (Docker v2) | skopeo | ready |
+| busybox from Docker Hub (OCI) | skopeo | ready |
+| busybox, `dockerTools.buildImage` (single layer) | Nix | ready |
+| busybox, `dockerTools.buildLayeredImage` | Nix | runtime image build failed |
+| same, OCI format | Nix | runtime image build failed |
+| nix-cf-proof, `buildLayeredImage`, 100 layers | Nix | runtime image build failed |
+
+Fix applied: devenv.nix uses `dockerTools.buildImage`. Report upstream to the Containers team, with this table.
+
+
 ## 1. GitHub app access to acoyfellow/nix-cf-proof (open)
 
 - Tick 1: OAuth authorize succeeded (redirect returned a code to dash.cloudflare.com).

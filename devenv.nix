@@ -23,10 +23,10 @@ let
     paths = [ patchedGit forcePushProbe gitIdentity pkgs.bashInteractive pkgs.coreutils pkgs.cacert ];
   };
   nixosSystem = import ./nix/nixos-container.nix { inherit pkgs patchedGit; };
-  image = pkgs.dockerTools.buildLayeredImage {
+  image = pkgs.dockerTools.buildImage {
     name = "nix-cf-proof";
     tag = "latest";
-    contents = [ sandbox ];
+    copyToRoot = [ sandbox ];
     extraCommands = ''
       mkdir -p tmp proof
       chmod 1777 tmp
