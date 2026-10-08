@@ -5,7 +5,7 @@ node_modules
 .wrangler
 result*
 container/ci.env
-receipts/local-*.json
+receipts/local-*
 receipts/proof-token
 .dev.vars
 worker-configuration.d.ts
