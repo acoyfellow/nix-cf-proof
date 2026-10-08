@@ -16,7 +16,7 @@ token=$(cat "$TOKEN_FILE")
 
 devenv shell -- git-identity > receipts/local-identity.json
 devenv shell -- force-push-probe > receipts/local-force-push.txt || fail "local force-push probe failed"
-grep -q '^FORCE_PUSH_REFUSED=4$' receipts/local-force-push.txt || fail "local git allowed a force push"
+grep -q '^FORCE_PUSH_REFUSED=6$' receipts/local-force-push.txt || fail "local git allowed a force push"
 
 call() { curl -fsS --max-time 180 -H "authorization: Bearer $token" "$WORKER_URL$1"; }
 call /probe/sandbox > receipts/container-sandbox.json || fail "sandbox probe request failed"
@@ -48,7 +48,7 @@ built_store=$(jq -r .git_store_path receipts/cloudflare-build.json)
 [ "$container_store" = "$built_store" ] || fail "container git $container_store is not the Cloudflare build output $built_store"
 
 jq -e '.forcePush.exitCode == 0' "$sandbox" >/dev/null || fail "container force-push probe errored"
-jq -r '.forcePush.stdout' "$sandbox" | grep -q '^FORCE_PUSH_REFUSED=4$' || fail "container git allowed a force push"
+jq -r '.forcePush.stdout' "$sandbox" | grep -q '^FORCE_PUSH_REFUSED=6$' || fail "container git allowed a force push"
 
 systemd=receipts/container-systemd.json
 lifecycle=$(jq -r '.lifecycle // empty' "$systemd")

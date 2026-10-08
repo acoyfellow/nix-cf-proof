@@ -1,9 +1,6 @@
 final: prev:
 let
-  forcePushPatches = [
-    ./patches/001-disable-force-push.patch
-    ./patches/002-disable-force-with-lease-and-plus-refspec.patch
-  ];
+  forcePushPatches = [ ./patches/refuse-forced-ref-updates.patch ];
   withoutForcePush = git: git.overrideAttrs (old: {
     patches = (old.patches or [ ]) ++ forcePushPatches;
     doCheck = false;

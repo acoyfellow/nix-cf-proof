@@ -1,0 +1,17 @@
+--- a/remote.c
++++ b/remote.c
+@@ -1747,10 +1747,10 @@
+ 		 * "--force" will defeat any rejection implemented
+ 		 * by the rules above.
+ 		 */
+-		if (!force_ref_update)
+-			ref->status = reject_reason;
+-		else if (reject_reason)
+-			ref->forced_update = 1;
++		if (force_ref_update && reject_reason)
++			die(_("force push is disabled and not allowed: %s would lose commits"),
++			    ref->name);
++		ref->status = reject_reason;
+ 	}
+ }
+ 
