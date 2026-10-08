@@ -1,5 +1,9 @@
-refused git push --force origin HEAD:main
-refused git push -f origin HEAD:main
-refused git push --force-with-lease origin HEAD:main
+allowed fast-forward git push origin HEAD:main
+refused git push --force
+refused git push -f
+refused git push --force-with-lease
 refused git push origin +HEAD:main
-FORCE_PUSH_REFUSED=4
+refused git push with +refspec from config
+refused git push --mirror
+remote main unchanged at 62b51c4c5d4b123573ec6f751a6fc6bb84a607cc
+FORCE_PUSH_REFUSED=6
