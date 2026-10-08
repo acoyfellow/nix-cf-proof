@@ -2,9 +2,13 @@
 
 One `devenv.nix` builds a `git` that cannot force-push. The same file gives you that git on your Mac and in a live Cloudflare Container. Cloudflare builds the container image itself, in a Cloudflare Container. No Docker. No GitHub Actions.
 
+![The same patched git on a Mac and in a Cloudflare Container refuses six forms of force push](media/proof.gif)
+
 ```sh
 ./proof.sh
 ```
+
+The recording comes from [`scripts/demo.sh`](scripts/demo.sh), which reads live output and receipts. An MP4 is in [`media/proof.mp4`](media/proof.mp4).
 
 `proof.sh` exits 0 only when every row below is true. The last passing run is in [`receipts/gate.json`](receipts/gate.json).
 
