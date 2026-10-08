@@ -1,0 +1,10 @@
+{
+  "gate": "pass",
+  "git_version": "git version 2.55.0",
+  "overlay_patch_sha256": "4536629648456fc9aa17815a6b319e4dfaccd19f1380b89cba7eb7fc2ee65139",
+  "container_git_store_path": "/nix/store/y1a5p4c9gs25w531kpni5hmh03gf2pcm-git-2.55.0",
+  "cloudflare_build_location": "ewr15",
+  "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:64d1918081cf6acf04e26384b9f0bbec634b6c6d9bfb2bf69a40f9261daec342",
+  "systemd_entrypoint": "boots",
+  "systemd_lifecycle": "alive-after-20s"
+}

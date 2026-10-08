@@ -1,0 +1,62 @@
+• Validating lock
+✓ Validating lock in 4.92ms
+  evaluating file '«nix-internal»/derivation-internal.nix'
+• Configuring shell
+• Configuring cachix
+  [35;1mwarning:[0m Substituter '[35;1mhttps://devenv.cachix.org[0m' is already present in the substituters list
+✓ Configuring cachix in 8.67ms
+• Evaluating shell
+• Building force-push-probe
+  structuredAttrs is enabled
+✓ Building force-push-probe in 3.61s
+• Building devenv-profile
+  structuredAttrs is enabled
+  created 212 symlinks in user environment
+✓ Building devenv-profile in 6.14s
+• Building devenv-shell
+  Running phase: buildPhase
+✓ Building devenv-shell in 1.21s
+• Building devenv-shell-env
+✓ Building devenv-shell-env in 845ms
+✓ Evaluating shell in 36.6s
+✓ Configuring shell in 36.7s
+• Loading tasks
+• Evaluating devenv.config.task.config
+✓ Evaluating devenv.config.task.config in 6.81ms
+✓ Loading tasks in 12.4ms
+• Running tasks
+• Running devenv:files:cleanup
+✓ Running devenv:files:cleanup in 137ms
+• Running devenv:enterShell
+✓ Running devenv:enterShell in 59.8ms
+✓ Running tasks in 197ms
+• Validating lock
+✓ Validating lock in 3.48ms
+  evaluating file '«nix-internal»/derivation-internal.nix'
+• Configuring shell
+• Configuring cachix
+  [35;1mwarning:[0m Substituter '[35;1mhttps://devenv.cachix.org[0m' is already present in the substituters list
+✓ Configuring cachix in 6.85ms
+• Evaluating shell
+✓ Evaluating shell in 81.8ms (cached)
+✓ Configuring shell in 96.0ms
+• Loading tasks
+• Evaluating devenv.config.task.config
+✓ Evaluating devenv.config.task.config in 427µs (cached)
+✓ Loading tasks in 8.79ms
+• Running tasks
+• Running devenv:files:cleanup
+✓ Running devenv:files:cleanup in 51.7ms
+• Running devenv:enterShell
+✓ Running devenv:enterShell in 68.7ms
+✓ Running tasks in 122ms
+{
+  "gate": "pass",
+  "git_version": "git version 2.55.0",
+  "overlay_patch_sha256": "4536629648456fc9aa17815a6b319e4dfaccd19f1380b89cba7eb7fc2ee65139",
+  "container_git_store_path": "/nix/store/y1a5p4c9gs25w531kpni5hmh03gf2pcm-git-2.55.0",
+  "cloudflare_build_location": "ewr15",
+  "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:64d1918081cf6acf04e26384b9f0bbec634b6c6d9bfb2bf69a40f9261daec342",
+  "systemd_entrypoint": "boots",
+  "systemd_lifecycle": "alive-after-20s"
+}

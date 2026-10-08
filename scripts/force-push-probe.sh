@@ -1,6 +1,7 @@
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
-g() { git -c user.name=probe -c user.email=probe@example.com -c init.defaultBranch=main "$@"; }
+export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
+g() { git -c core.hooksPath=/dev/null -c user.name=probe -c user.email=probe@example.com -c init.defaultBranch=main "$@"; }
 
 g init -q --bare "$work/remote.git"
 g clone -q "$work/remote.git" "$work/clone" 2>/dev/null

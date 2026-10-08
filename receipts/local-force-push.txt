@@ -1,0 +1,5 @@
+refused git push --force origin HEAD:main
+refused git push -f origin HEAD:main
+refused git push --force-with-lease origin HEAD:main
+refused git push origin +HEAD:main
+FORCE_PUSH_REFUSED=4
