@@ -1,0 +1,14 @@
+{
+  "runId": "ter_20261010090639398_z92x5t",
+  "status": "done",
+  "taskContractStatus": "verified",
+  "taskProof": {
+    "command": "test \"$(curl -s -o /dev/null -w '%{http_code}' https://terrarium-hello.coy.workers.dev)\" = 200",
+    "exitCode": 0,
+    "output": ""
+  },
+  "startedAt": "2026-10-10T09:06:39.398Z",
+  "finishedAt": "2026-10-10T09:06:53.601Z",
+  "background": true,
+  "model": "claude-opus-5-5"
+}

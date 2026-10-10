@@ -28,7 +28,7 @@ judge() {
 
 guarded_cf() {
   local command_json verdict decision
-  command_json=$(jq -cn '$ARGS.positional' --args cf "$@")
+  command_json=$(jq -cn '$ARGS.positional' --args -- cf "$@")
   verdict=$(judge "$command_json")
   decision=$(jq -r .decision <<< "$verdict")
   if [ "$decision" != accept ]; then
