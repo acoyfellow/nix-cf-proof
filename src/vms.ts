@@ -131,9 +131,18 @@ export class VirtualMachine extends DurableObject<Env> {
 
   private async bootReport(): Promise<string> {
     const port = this.requireContainer().getTcpPort(8080);
-    await (await port.fetch('http://vm/')).text();
-    await scheduler.wait(1500);
-    return (await port.fetch('http://vm/')).text();
+    let lastError: unknown = null;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      try {
+        await (await port.fetch('http://vm/')).text();
+        await scheduler.wait(1500);
+        return await (await port.fetch('http://vm/')).text();
+      } catch (error) {
+        lastError = error;
+        await scheduler.wait(1500);
+      }
+    }
+    throw lastError;
   }
 
   async exec(command: string): Promise<VmCommandResult> {
@@ -149,8 +158,12 @@ export class VirtualMachine extends DurableObject<Env> {
 
   async destroy(): Promise<{ destroyed: boolean }> {
     const container = this.requireContainer();
-    if (container.running) {
+    try {
       await container.destroy('vm destroyed');
+    } catch (error) {
+      if (container.running) {
+        throw error;
+      }
     }
     await this.ctx.storage.deleteAll();
     return { destroyed: true };
@@ -173,6 +186,7 @@ export class VirtualMachine extends DurableObject<Env> {
   }
 
   private async waitForExec(flavor: VmFlavor): Promise<void> {
+    let lastError = '';
     for (let attempt = 0; attempt < READY_ATTEMPTS; attempt++) {
       if (flavor === 'nixos') {
         try {
@@ -180,7 +194,8 @@ export class VirtualMachine extends DurableObject<Env> {
           if (report.includes('--- systemctl ---') && /^1 \S*systemd/m.test(report)) {
             return;
           }
-        } catch {
+        } catch (error) {
+          lastError = String(error);
           await scheduler.wait(1000);
           continue;
         }
@@ -198,7 +213,7 @@ export class VirtualMachine extends DurableObject<Env> {
       }
       await scheduler.wait(500);
     }
-    throw new Error(`${flavor} vm never accepted exec`);
+    throw new Error(`${flavor} vm never became ready after ${READY_ATTEMPTS} attempts: ${lastError}`);
   }
 
   private requireContainer(): Container {

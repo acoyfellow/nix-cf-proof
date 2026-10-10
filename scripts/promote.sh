@@ -26,7 +26,7 @@ IMAGE="$image" node -e '
 const fs = require("fs");
 const path = "wrangler.jsonc";
 const text = fs.readFileSync(path, "utf8");
-const next = text.replace(/"image": "registry\.cloudflare\.com\/[^"]+"/, `"image": "${process.env.IMAGE}"`);
+const next = text.replace(/"image": "registry\.cloudflare\.com\/[^"\/]+\/nix-cf-proof@sha256:[a-f0-9]+"/g, `"image": "${process.env.IMAGE}"`);
 if (next === text && !text.includes(process.env.IMAGE)) throw new Error("no sandbox image entry in wrangler.jsonc");
 fs.writeFileSync(path, next);
 '
