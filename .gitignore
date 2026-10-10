@@ -10,3 +10,4 @@ receipts/proof-token
 .dev.vars
 worker-configuration.d.ts
 .guardrail/
+receipts/judge-token

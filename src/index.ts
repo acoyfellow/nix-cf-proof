@@ -1,14 +1,24 @@
 import { BuilderComputer } from './builder';
+import { isJudgeRequest, judgeCommand } from './judge';
 
 type ContainerImageName = 'sandbox';
 
-type ProofEnv = Env & { PROOF_TOKEN: string; ACCOUNT_ID: string };
+type ProofEnv = Env & { PROOF_TOKEN: string; JUDGE_TOKEN: string; ACCOUNT_ID: string };
 
 type CommandResult = {
   command: string[];
   exitCode: number;
   stdout: string;
   stderr: string;
+};
+
+type EdgeTaskInput = {
+  taskToken: string;
+  accountId: string;
+  judgeUrl: string;
+  judgeToken: string;
+  worker: string;
+  goal: string;
 };
 
 const decoder = new TextDecoder();
@@ -23,6 +33,23 @@ export class SandboxComputer extends BuilderComputer {
       identity: await this.run(['/sandbox/bin/git-identity']),
       forcePush: await this.run(['/sandbox/bin/force-push-probe']),
       uname: await this.run(['/sandbox/bin/uname', '-a']),
+    };
+  }
+
+  async runEdgeTask(task: EdgeTaskInput): Promise<Record<string, CommandResult>> {
+    await this.ensureRunning(['/sandbox/bin/sleep', 'infinity'], true);
+    return {
+      receipt: await this.run(['/sandbox/bin/cat', '/proof/image.json']),
+      uname: await this.run(['/sandbox/bin/uname', '-a']),
+      task: await this.run(['/sandbox/bin/edge-task'], {
+        CLOUDFLARE_API_TOKEN: task.taskToken,
+        CLOUDFLARE_ACCOUNT_ID: task.accountId,
+        JUDGE_URL: task.judgeUrl,
+        JUDGE_TOKEN: task.judgeToken,
+        TASK_WORKER: task.worker,
+        TASK_GOAL: task.goal,
+        SSL_CERT_FILE: '/sandbox/etc/ssl/certs/ca-bundle.crt',
+      }),
     };
   }
 
@@ -83,13 +110,13 @@ export class SandboxComputer extends BuilderComputer {
     };
   }
 
-  private async ensureRunning(entrypoint: string[]): Promise<void> {
+  private async ensureRunning(entrypoint: string[], enableInternet = false): Promise<void> {
     const container = this.requireContainer();
     if (!container.running) {
       container.start({
         image: container.images[SANDBOX_IMAGE],
         entrypoint,
-        enableInternet: false,
+        enableInternet,
         instance: 'lite',
       });
     }
@@ -106,9 +133,9 @@ export class SandboxComputer extends BuilderComputer {
     throw new Error('container never accepted exec');
   }
 
-  private async run(command: string[]): Promise<CommandResult> {
+  private async run(command: string[], extraEnv: Record<string, string> = {}): Promise<CommandResult> {
     const process = await this.requireContainer().exec(command, {
-      env: { HOME: '/tmp', PATH: '/sandbox/bin' },
+      env: { HOME: '/tmp', PATH: '/sandbox/bin', ...extraEnv },
     });
     const output = await process.output();
     return {
@@ -124,12 +151,17 @@ function authorized(request: Request, env: ProofEnv): boolean {
   return request.headers.get('authorization') === `Bearer ${env.PROOF_TOKEN}`;
 }
 
+function authorizedJudge(request: Request, env: ProofEnv): boolean {
+  return Boolean(env.JUDGE_TOKEN) && request.headers.get('authorization') === `Bearer ${env.JUDGE_TOKEN}`;
+}
+
 export default {
   async fetch(request: Request, env: ProofEnv): Promise<Response> {
-    if (!env.PROOF_TOKEN || !authorized(request, env)) {
+    const { pathname } = new URL(request.url);
+    const judgeOnly = pathname === '/clef/judge' && authorizedJudge(request, env);
+    if (!judgeOnly && (!env.PROOF_TOKEN || !authorized(request, env))) {
       return new Response('unauthorized', { status: 401 });
     }
-    const { pathname } = new URL(request.url);
     try {
       if (pathname === '/probe/sandbox') {
         return Response.json(await env.SANDBOX.getByName('sandbox').probeSandbox());
@@ -143,6 +175,25 @@ export default {
           await env.SANDBOX.getByName('builder').startBuild({ ...body, accountId: env.ACCOUNT_ID }),
         );
       }
+      if (pathname === '/edge/task' && request.method === 'POST') {
+        const body = (await request.json()) as { taskToken: string; worker: string; goal: string };
+        const judgeUrl = new URL('/clef/judge', request.url).toString();
+        return Response.json(
+          await env.SANDBOX.getByName('edge-task').runEdgeTask({
+            ...body,
+            accountId: env.ACCOUNT_ID,
+            judgeUrl,
+            judgeToken: env.JUDGE_TOKEN,
+          }),
+        );
+      }
+      if (pathname === '/clef/judge' && request.method === 'POST') {
+        const body: unknown = await request.json();
+        if (!isJudgeRequest(body)) {
+          return Response.json({ error: 'expected {goal, command[]}' }, { status: 400 });
+        }
+        return Response.json(await judgeCommand(env.AI, body));
+      }
       if (pathname === '/build/status') {
         return Response.json(await env.SANDBOX.getByName('builder').status());
       }
@@ -151,6 +202,7 @@ export default {
           env.SANDBOX.getByName('sandbox').stop(),
           env.SANDBOX.getByName('systemd').stop(),
           env.SANDBOX.getByName('builder').stop(),
+          env.SANDBOX.getByName('edge-task').stop(),
         ]);
         return Response.json({ stopped: true });
       }

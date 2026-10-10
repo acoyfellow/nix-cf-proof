@@ -18,9 +18,29 @@ let
         "$(git --version)" "${patchedGit}" "${patchSha256}"
     '';
   };
+  cfCli = pkgs.stdenvNoCC.mkDerivation {
+    pname = "cf";
+    version = "0.10.0";
+    src = pkgs.fetchurl {
+      url = "https://registry.npmjs.org/cf/-/cf-0.10.0.tgz";
+      hash = "sha512-BC2i2QX2dfV3kxGrwGoELXAGTBBAthccYpergxkgiVkPxGVwFdnkldXei3JcXiAQDN5c+yqibOFwbV7MMlHXeQ==";
+    };
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    installPhase = ''
+      mkdir -p $out/lib/cf $out/bin
+      cp -r bin dist package.json $out/lib/cf/
+      makeWrapper ${pkgs.nodejs_22}/bin/node $out/bin/cf --add-flags $out/lib/cf/bin/cf
+    '';
+  };
+  edgeTask = pkgs.writeShellApplication {
+    name = "edge-task";
+    excludeShellChecks = [ "SC2016" ];
+    runtimeInputs = [ cfCli pkgs.coreutils pkgs.curl pkgs.jq pkgs.findutils pkgs.gnugrep ];
+    text = builtins.readFile ./scripts/edge-task.sh;
+  };
   sandbox = pkgs.buildEnv {
     name = "nix-cf-proof-sandbox";
-    paths = [ patchedGit forcePushProbe gitIdentity pkgs.bashInteractive pkgs.coreutils pkgs.cacert ];
+    paths = [ patchedGit forcePushProbe gitIdentity cfCli edgeTask pkgs.bashInteractive pkgs.coreutils pkgs.cacert ];
   };
   nixosSystem = import ./nix/nixos-container.nix { inherit pkgs patchedGit; };
   bootProbe = pkgs.writeShellScript "boot-probe" ''
@@ -88,7 +108,7 @@ in
 {
   overlays = [ (import ./nix/overlay.nix) ];
 
-  packages = [ patchedGit forcePushProbe gitIdentity ];
+  packages = [ patchedGit forcePushProbe gitIdentity cfCli edgeTask ];
 
   outputs = {
     git = patchedGit;
