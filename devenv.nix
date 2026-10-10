@@ -60,6 +60,8 @@ let
     (while true; do
       {
         printf 'HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\r\n'
+        echo "hostname=$(cat /proc/sys/kernel/hostname)"
+        echo "os_release=$(grep -E '^(ID|PRETTY_NAME)=' /etc/os-release 2>/dev/null | tr '\n' ' ')"
         cat /tmp/boot/preflight.txt
         echo '--- systemd console ---'
         tail -c 8000 /tmp/boot/console.log 2>/dev/null

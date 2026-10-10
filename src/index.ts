@@ -1,5 +1,8 @@
 import { BuilderComputer } from './builder';
 import { isJudgeRequest, judgeCommand } from './judge';
+import { VirtualMachine, type VmFlavor } from './vms';
+
+export { VirtualMachine };
 
 type ContainerImageName = 'sandbox';
 
@@ -174,6 +177,37 @@ export default {
         return Response.json(
           await env.SANDBOX.getByName('builder').startBuild({ ...body, accountId: env.ACCOUNT_ID }),
         );
+      }
+      if (pathname === '/vms' && request.method === 'GET') {
+        const names = await env.VM.getByName('registry').listNames();
+        const infos = await Promise.all(names.map((name) => env.VM.getByName(name).info()));
+        return Response.json({ vms: infos });
+      }
+      if (pathname === '/vms' && request.method === 'POST') {
+        const body = (await request.json()) as { ubuntu?: number; nixos?: number; prefix?: string };
+        const prefix = body.prefix ?? 'vm';
+        const wanted: { name: string; flavor: VmFlavor }[] = [
+          ...Array.from({ length: body.ubuntu ?? 0 }, (_, index) => ({ name: `${prefix}-ubuntu-${index + 1}`, flavor: 'ubuntu' as const })),
+          ...Array.from({ length: body.nixos ?? 0 }, (_, index) => ({ name: `${prefix}-nixos-${index + 1}`, flavor: 'nixos' as const })),
+        ];
+        const existing = await env.VM.getByName('registry').listNames();
+        await env.VM.getByName('registry').setNames([...new Set([...existing, ...wanted.map((vm) => vm.name)])]);
+        const results = await Promise.allSettled(wanted.map((vm) => env.VM.getByName(vm.name).create(vm.name, vm.flavor)));
+        return Response.json({
+          vms: results.map((result, index) =>
+            result.status === 'fulfilled' ? result.value : { name: wanted[index].name, error: String(result.reason) },
+          ),
+        });
+      }
+      if (pathname === '/vms/exec' && request.method === 'POST') {
+        const body = (await request.json()) as { name: string; command: string };
+        return Response.json(await env.VM.getByName(body.name).exec(body.command));
+      }
+      if (pathname === '/vms' && request.method === 'DELETE') {
+        const names = await env.VM.getByName('registry').listNames();
+        const results = await Promise.allSettled(names.map((name) => env.VM.getByName(name).destroy()));
+        await env.VM.getByName('registry').setNames([]);
+        return Response.json({ destroyed: names, errors: results.filter((result) => result.status === 'rejected').map(String) });
       }
       if (pathname === '/edge/task' && request.method === 'POST') {
         const body = (await request.json()) as { taskToken: string; worker: string; goal: string };

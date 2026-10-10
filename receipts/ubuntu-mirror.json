@@ -1,0 +1,14 @@
+{
+  "source_image": "docker.io/library/ubuntu@sha256:534baea6a22c03a63003dbc8dbe78fe34bc0d7e595d9a9dc9834884ff530eb55",
+  "image_digest": "sha256:f610ab94648195aa356059f5b41d6085c9d4d903c072430cdd1af7bdb646106b",
+  "image_repository": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/vm-ubuntu",
+  "uname": "Linux 61f3d5be967eaf1e87a0504b9115a809957ad25035e4195308990725a1fc0023 6.18.54-cloudflare-microvm-2026.9.16 #1 SMP PREEMPT_DYNAMIC Mon Sep 27 00:00:00 UTC 2010 x86_64 GNU/Linux",
+  "cloudflare_container_env": {
+    "CLOUDFLARE_LOCATION": "ewr15",
+    "CLOUDFLARE_NODE_ID": "1049m59",
+    "CLOUDFLARE_REGION": "ENAM",
+    "CLOUDFLARE_DURABLE_OBJECT_ID": "61f3d5be967eaf1e87a0504b9115a809957ad25035e4195308990725a1fc0023",
+    "CLOUDFLARE_PLACEMENT_ID": "05258c8c-d927-49ff-bd0c-0c2585b72b74"
+  },
+  "finished_at": "2026-10-10T14:00:27.335Z"
+}
