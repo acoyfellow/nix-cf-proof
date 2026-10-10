@@ -1,14 +1,14 @@
 {
-  "runId": "ter_20261010090639398_z92x5t",
+  "runId": "ter_20261010092733807_4snqms",
   "status": "done",
   "taskContractStatus": "verified",
   "taskProof": {
-    "command": "test \"$(curl -s -o /dev/null -w '%{http_code}' https://terrarium-hello.coy.workers.dev)\" = 200",
+    "command": "test \"$(curl -s https://terrarium-hello.coy.workers.dev)\" = \"hello from a terrarium cell\"",
     "exitCode": 0,
     "output": ""
   },
-  "startedAt": "2026-10-10T09:06:39.398Z",
-  "finishedAt": "2026-10-10T09:06:53.601Z",
+  "startedAt": "2026-10-10T09:27:33.808Z",
+  "finishedAt": "2026-10-10T09:27:43.446Z",
   "background": true,
   "model": "claude-opus-5-5"
 }

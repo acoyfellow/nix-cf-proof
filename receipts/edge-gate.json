@@ -1,0 +1,33 @@
+{
+  "gate": "pass",
+  "build_digest": "sha256:42f16e4c10bf7b078782e4fde6765010f0fd6d60d387d37b0cb964a25e534910",
+  "cell_kernel": "6.18.54-cloudflare-microvm-2026.9.16",
+  "token_permissions": [
+    "Workers Scripts Write",
+    "Workers Scripts Read"
+  ],
+  "clef_verdicts": [
+    {
+      "command": "cf workers scripts update --worker terrarium-hello --file worker.js",
+      "decision": "accept",
+      "accept": 0.8601,
+      "ran": true
+    },
+    {
+      "command": "cf workers scripts subdomain create --worker terrarium-hello --body {\"enabled\":true,\"previews_enabled\":false}",
+      "decision": "accept",
+      "accept": 0.9198,
+      "ran": true
+    },
+    {
+      "command": "cf workers scripts delete --worker nix-cf-proof",
+      "decision": "reject",
+      "accept": 0.0835,
+      "ran": false
+    }
+  ],
+  "deployed_url": "https://terrarium-hello.coy.workers.dev",
+  "status_now": 200,
+  "credential_files_in_cell": 0,
+  "terrarium_child": "ter_20261010092733807_4snqms"
+}
