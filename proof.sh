@@ -26,7 +26,8 @@ sandbox=receipts/container-sandbox.json
 test -s receipts/cloudflare-build.json || fail "missing Cloudflare builder receipt"
 jq -e '(.cloudflare_container_env.CLOUDFLARE_DURABLE_OBJECT_ID | length) > 0 and (.uname | contains("cloudflare-microvm"))' \
   receipts/cloudflare-build.json >/dev/null || fail "image was not built in a Cloudflare Container"
-deployed_image=$(grep -o 'registry.cloudflare.com/[^"]*@sha256:[a-f0-9]*' wrangler.jsonc)
+deployed_image=$(grep -o 'registry.cloudflare.com/[^"]*/nix-cf-proof@sha256:[a-f0-9]*' wrangler.jsonc | sort -u)
+[ "$(printf '%s\n' "$deployed_image" | wc -l | tr -d ' ')" = 1 ] || fail "wrangler.jsonc pins more than one nix-cf-proof image"
 built_image="$(jq -r '.image_repository + "@" + .image_digest' receipts/cloudflare-build.json)"
 [ "$deployed_image" = "$built_image" ] || fail "deployed image $deployed_image is not the Cloudflare build $built_image"
 image_git=$(jq -r '.receipt.stdout | fromjson | .git_store_path' "$sandbox")
