@@ -4,7 +4,7 @@
   "overlay_patch_sha256": "67b647b1f90e7c15b5d898192a8212ddd7c810c64558d2ec1e363cb20c55f513",
   "container_git_store_path": "/nix/store/nlys6hfn5gypwsm5qsg2frwzgygkv1xp-git-2.55.0",
   "cloudflare_build_location": "ewr15",
-  "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:5a455a810b390dad2566b9a0489b310ddb23b8e7bae80b6e97ba129551f3195e",
+  "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:4c08359f1d0fac1679236000a1b6236b07d0d69e4fecf78a32881163c12f3fb4",
   "systemd_entrypoint": "boots",
   "systemd_lifecycle": "alive-after-20s"
 }

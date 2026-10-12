@@ -1,5 +1,5 @@
 {
-  "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:42f16e4c10bf7b078782e4fde6765010f0fd6d60d387d37b0cb964a25e534910",
+  "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:4c08359f1d0fac1679236000a1b6236b07d0d69e4fecf78a32881163c12f3fb4",
   "image_receipt": {
     "git_store_path": "/nix/store/nlys6hfn5gypwsm5qsg2frwzgygkv1xp-git-2.55.0",
     "sandbox_store_path": "/nix/store/9csdg0b6ca0y3pvi11mc430h13ixa6nq-nix-cf-proof-sandbox",
@@ -7,8 +7,8 @@
   },
   "cell_kernel": "6.18.54-cloudflare-microvm-2026.9.16",
   "token": {
-    "name": "terrarium-task-edge-20261010092653",
-    "expires_on": "2026-10-10T09:56:53Z",
+    "name": "terrarium-task-edge-20261012101558",
+    "expires_on": "2026-10-12T10:45:58Z",
     "permission_groups": [
       "Workers Scripts Write",
       "Workers Scripts Read"
@@ -28,7 +28,7 @@
     {
       "step": "credential-scan",
       "credential_files": [],
-      "home": "/tmp/tmp.gASTXBqcwp/home"
+      "home": "/tmp/tmp.ve5cBZ9zLv/home"
     },
     {
       "step": "cell",
@@ -56,11 +56,11 @@
         },
         "onTaskProbability": 0.9144,
         "destructiveProbability": 0.0387,
-        "latencyMs": 239
+        "latencyMs": 360
       },
       "ran": true,
       "exit": 0,
-      "output": "/bin/sh: line 1: ps: command not found\n{\n  \"created_on\": \"2026-10-10T09:27:09.307757Z\",\n  \"modified_on\": \"2026-10-10T09:27:09.307757Z\",\n  \"id\": \"terrarium-hello\",\n  \"tag\": \"0ff4c44621774a4ca1036662e932f043\",\n  \"entry_point\": \"addEventListener(\\\"fetch\\\", (event) => {\\n  event.respondWith(new Response(\\\"hello from a terrarium cell\\\\n\\\"));\\n});\\n\",\n  \"tags\": null,\n  \"deployment_id\": \"f2314669af104e0a81c98b50e1f41200\",\n  \"tail_consumers\": null,\n  \"logpush\": false,\n  \"has_assets\": false,\n  \"has_modules\": true,\n  \"etag\": \"06843a0f454f3581f251004863aedcaded2a4013daa10d2c2f6a2c34812888ba\",\n  \"handlers"
+      "output": "/bin/sh: line 1: ps: command not found\n{\n  \"created_on\": \"2026-10-10T09:27:09.307757Z\",\n  \"modified_on\": \"2026-10-12T10:16:04.528481Z\",\n  \"id\": \"terrarium-hello\",\n  \"tag\": \"0ff4c44621774a4ca1036662e932f043\",\n  \"entry_point\": \"addEventListener(\\\"fetch\\\", (event) => {\\n  event.respondWith(new Response(\\\"hello from a terrarium cell\\\\n\\\"));\\n});\\n\",\n  \"tags\": null,\n  \"deployment_id\": \"09aa94c183994fe7bdf3ba4f908b8a14\",\n  \"tail_consumers\": null,\n  \"logpush\": false,\n  \"has_assets\": false,\n  \"has_modules\": true,\n  \"etag\": \"06843a0f454f3581f251004863aedcaded2a4013daa10d2c2f6a2c34812888ba\",\n  \"handlers"
     },
     {
       "step": "cf",
@@ -84,7 +84,7 @@
         },
         "onTaskProbability": 0.8866,
         "destructiveProbability": 0.0341,
-        "latencyMs": 151
+        "latencyMs": 159
       },
       "ran": true,
       "exit": 0,
@@ -109,7 +109,7 @@
         },
         "onTaskProbability": 0.551,
         "destructiveProbability": 0.5726,
-        "latencyMs": 146
+        "latencyMs": 157
       },
       "ran": false
     },

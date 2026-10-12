@@ -15,7 +15,7 @@
       "scheduling_policy": "durable_object",
       "images": {
         "sandbox": {
-          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:a1a62ac1c013177429b24e88fbef1c07a10e023208b67af33a4d06a6f7b76e1b"
+          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:4c08359f1d0fac1679236000a1b6236b07d0d69e4fecf78a32881163c12f3fb4"
         }
       }
     },
@@ -24,7 +24,7 @@
       "scheduling_policy": "durable_object",
       "images": {
         "nixos": {
-          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:a1a62ac1c013177429b24e88fbef1c07a10e023208b67af33a4d06a6f7b76e1b"
+          "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/nix-cf-proof@sha256:4c08359f1d0fac1679236000a1b6236b07d0d69e4fecf78a32881163c12f3fb4"
         },
         "ubuntu": {
           "image": "registry.cloudflare.com/bfcb6ac5b3ceaf42a09607f6f7925823/vm-ubuntu@sha256:f610ab94648195aa356059f5b41d6085c9d4d903c072430cdd1af7bdb646106b"

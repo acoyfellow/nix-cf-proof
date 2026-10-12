@@ -1,6 +1,6 @@
 {
   "gate": "pass",
-  "build_digest": "sha256:42f16e4c10bf7b078782e4fde6765010f0fd6d60d387d37b0cb964a25e534910",
+  "build_digest": "sha256:4c08359f1d0fac1679236000a1b6236b07d0d69e4fecf78a32881163c12f3fb4",
   "cell_kernel": "6.18.54-cloudflare-microvm-2026.9.16",
   "token_permissions": [
     "Workers Scripts Write",

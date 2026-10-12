@@ -10,6 +10,14 @@ worker_url=${WORKER_URL:-https://nix-cf-proof.coy.workers.dev}
 
 token_meta=$(TASK_ACCOUNT_ID=$account_id ./scripts/mint-task-token.sh "$task_id" 1800)
 token_file=$HOME/.terrarium/secrets/task-tokens/$task_id.secret
+minter_file=${TOKEN_MINTER_FILE:-$HOME/.terrarium/secrets/coy-token-minter.secret}
+revoke_task_token() {
+  token_id=$(jq -r .id <<< "$token_meta")
+  curl -sS -X DELETE -H "Authorization: Bearer $(cat "$minter_file")" \
+    "https://api.cloudflare.com/client/v4/accounts/$account_id/tokens/$token_id" | jq -r '"task token revoked: " + (.success|tostring)' >&2
+  rm -f "$token_file"
+}
+trap revoke_task_token EXIT
 api=https://api.cloudflare.com/client/v4/accounts/$account_id
 probe() { curl -s -H "Authorization: Bearer $(cat "$token_file")" "$api/$1" | jq -r .success; }
 token_probe=$(jq -n --arg r2 "$(probe r2/buckets)" --arg tokens "$(probe tokens)" --arg workers "$(probe workers/scripts)" \

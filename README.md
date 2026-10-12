@@ -59,6 +59,20 @@ npx wrangler deploy
 
 Behind Cloudflare WARP, Nix needs the WARP root certificate. Refer to [`receipts/BLOCKERS.md`](receipts/BLOCKERS.md).
 
+## More experiments on the same image
+
+### Boxes
+
+`scripts/vms.sh create --ubuntu 5 --nixos 5` starts 10 Cloudflare Containers. Each one is a Durable Object with its own name. `vms.sh list`, `vms.sh exec NAME COMMAND...` and `vms.sh destroy` manage them. `exec` works on Ubuntu boxes. NixOS boxes report their boot status over HTTP. `scripts/vms-proof.sh` creates all 10, runs a command, destroys them, and writes [`receipts/vms.json`](receipts/vms.json). The Ubuntu image is the official Ubuntu 24.04 image, copied into the Cloudflare registry by `scripts/mirror-ubuntu.sh`.
+
+### An agent task with a narrow key
+
+`scripts/run-edge-task.sh` gives an agent in a container one job: deploy one hello-world Worker. It makes a new Cloudflare API key for that job only. The key can edit Workers and nothing else, and it expires in 30 minutes. The script deletes the key when it exits. Before each `cf` command, a Clef model on Workers AI accepts or rejects it. `scripts/edge-task-proof.sh` checks the result and writes [`receipts/edge-gate.json`](receipts/edge-gate.json).
+
+The key still enters the container. A better design keeps the key outside the container and adds it to requests on the way out. This repository does not do that yet.
+
+Setup for this part: a key that can make keys, stored in `~/.terrarium/secrets/coy-token-minter.secret`, and a `JUDGE_TOKEN` Worker secret.
+
 ## Findings
 
 - **Cloudflare cannot prepare `dockerTools.buildLayeredImage` images.** The image preparation API reports `runtime image build failed`. Wrangler shows only "Preparing" and times out after 15 minutes. Single-layer `dockerTools.buildImage` images work. The test table is in [`receipts/BLOCKERS.md`](receipts/BLOCKERS.md).
